@@ -50,9 +50,38 @@ for place in places:
     else:
         print("❓ Outdoor seating: Unknown (field missing)")
 
-    # YOUR TASK — write the body of this loop:
-    # 1. GET the details_url with details_headers
-    # 2. parse the JSON
-    # 3. read the name (displayName.text) and outdoorSeating SAFELY
-    #    (remember: use .get() so a missing field gives None instead of crashing)
-    # 4. print the name and what outdoorSeating came back as
+routes_url="https://routes.googleapis.com/directions/v2:computeRoutes"
+routes_body={
+  "origin":{
+    "location":{
+      "latLng":{
+        "latitude": 31.51945284553336,
+        "longitude": 74.3456551851925
+      }
+    }
+  },
+  "destination":{
+    "location":{
+      "latLng":{
+        "latitude": 31.53262038426561,
+        "longitude": 74.3605894759086
+      }
+    }
+  },
+  "travelMode": "DRIVE",
+  "routingPreference": "TRAFFIC_AWARE",
+  "computeAlternativeRoutes": False,
+  "routeModifiers": {
+    "avoidTolls": False,
+    "avoidHighways": False,
+    "avoidFerries": False
+  },
+  "languageCode": "en-US",
+  "units": "METRIC"
+}
+routes_headers={"Content-Type": "application/json","X-Goog-Api-Key":api_key,
+"X-Goog-FieldMask": "routes.distanceMeters,routes.duration"}
+
+routes_response = requests.post(routes_url, headers=routes_headers, json=routes_body)
+ans = routes_response.json()
+print(ans)
