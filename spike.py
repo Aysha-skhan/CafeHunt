@@ -6,7 +6,6 @@ import json
 load_dotenv()
 api_key = os.environ["GOOGLE_API_KEY"]
 
-# --- Step 1: Nearby Search to get a list of café ids ---
 search_url = "https://places.googleapis.com/v1/places:searchNearby"
 search_headers = {
     "Content-Type": "application/json",
@@ -27,7 +26,6 @@ body = {
 search_response = requests.post(search_url, headers=search_headers, json=body)
 places = search_response.json()["places"]
 
-# --- Step 2: for each café, call Place Details and check outdoorSeating ---
 details_headers = {
     "Content-Type": "application/json",
     "X-Goog-Api-Key": api_key,
