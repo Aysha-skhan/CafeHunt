@@ -36,7 +36,7 @@ Then open http://127.0.0.1:8000/
 
 - [x] Data spike — Places, outdoor seating, routing all proven
 - [x] `Cafe` model + migration
-- [ ] Search view + caching
+- [x] Search view + caching
 - [ ] Map + results UI
 - [ ] Deploy
 - [ ] Stretch: menu/price extraction (OCR + LLM)
