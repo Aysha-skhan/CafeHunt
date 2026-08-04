@@ -26,7 +26,7 @@ python manage.py runserver
 
 Then open http://127.0.0.1:8000/
 
-## Notes to self
+## Notes
 
 - `.env` (API key) and `db.sqlite3` (local data) are gitignored — supply your own `.env`.
 - Needs a Google Cloud key with **Places API (New)** and **Routes API** enabled. Keep the billing budget cap set.
