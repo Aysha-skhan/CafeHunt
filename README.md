@@ -2,7 +2,7 @@
 
 Find good cafés nearby for a lunch or dinner outing  — rating, outdoor seating, distance, and travel time, all in one place instead of flipping between three apps.
 
-Django app backed by the Google Maps Platform APIs (Places + Routes).
+Django app backed by the Google Maps Platform APIs (Places + Routes)...
 
 ## Stack
 
