@@ -10,8 +10,17 @@ api_key = os.environ["GOOGLE_API_KEY"]
 # def search(request):
 #     return HttpResponse("Hello, CafeHunt")
 def search(request):
-    search_lat,search_lng=31.47462066215001, 74.38015766546623
-    # search_lat = 31.5186      # hardcoded for now
+    bad_request=HttpResponse("lat and lng are required and must be valid numbers.", status=400) 
+    search_lat=request.GET.get("lat")
+    search_lng=request.GET.get("lng")
+    if (search_lat is None) or (search_lng is None):
+        return bad_request  
+    try:
+        search_lat=float(search_lat)
+        search_lng=float(search_lng)
+    except (ValueError, TypeError):
+            return bad_request
+    # search_lat = 31.5186      # hardcoded 
     # search_lng = 74.34589
     nearby = Cafe.objects.filter(
     latitude__lte = search_lat + 0.0045,
