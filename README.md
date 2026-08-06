@@ -2,7 +2,7 @@
 
 Find good cafés nearby for a lunch or dinner outing  — rating, outdoor seating, distance, and travel time, all in one place instead of flipping between three apps.
 
-Django app backed by the Google Maps Platform APIs (Places + Routes).
+Django app backed by the Google Maps Platform APIs (Places + Routes)...
 
 ## Stack
 
@@ -26,7 +26,7 @@ python manage.py runserver
 
 Then open http://127.0.0.1:8000/
 
-## Notes to self
+## Notes
 
 - `.env` (API key) and `db.sqlite3` (local data) are gitignored — supply your own `.env`.
 - Needs a Google Cloud key with **Places API (New)** and **Routes API** enabled. Keep the billing budget cap set.
@@ -36,7 +36,7 @@ Then open http://127.0.0.1:8000/
 
 - [x] Data spike — Places, outdoor seating, routing all proven
 - [x] `Cafe` model + migration
-- [ ] Search view + caching
+- [x] Search view + caching
 - [ ] Map + results UI
 - [ ] Deploy
 - [ ] Stretch: menu/price extraction (OCR + LLM)
