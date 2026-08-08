@@ -6,47 +6,47 @@ import json
 load_dotenv()
 api_key = os.environ["GOOGLE_API_KEY"]
 
-search_url = "https://places.googleapis.com/v1/places:searchNearby"
-search_headers = {
-    "Content-Type": "application/json",
-    "X-Goog-Api-Key": api_key,
-    "X-Goog-FieldMask": "places.id,places.displayName",
-}
-body = {
-    "includedTypes": ["cafe"],
-    "maxResultCount": 4,
-    "locationRestriction": {
-        "circle": {
-            "center": {"latitude": 31.5186, "longitude": 74.34589},
-            "radius": 500.0,
-        }
-    },
-}
+# search_url = "https://places.googleapis.com/v1/places:searchNearby"
+# search_headers = {
+#     "Content-Type": "application/json",
+#     "X-Goog-Api-Key": api_key,
+#     "X-Goog-FieldMask": "places.id,places.displayName",
+# }
+# body = {
+#     "includedTypes": ["cafe"],
+#     "maxResultCount": 4,
+#     "locationRestriction": {
+#         "circle": {
+#             "center": {"latitude": 31.5186, "longitude": 74.34589},
+#             "radius": 500.0,
+#         }
+#     },
+# }
 
-search_response = requests.post(search_url, headers=search_headers, json=body)
-places = search_response.json()["places"]
+# search_response = requests.post(search_url, headers=search_headers, json=body)
+# places = search_response.json()["places"]
 
-details_headers = {
-    "Content-Type": "application/json",
-    "X-Goog-Api-Key": api_key,
-    "X-Goog-FieldMask": "displayName,outdoorSeating",
-}
+# details_headers = {
+#     "Content-Type": "application/json",
+#     "X-Goog-Api-Key": api_key,
+#     "X-Goog-FieldMask": "displayName,outdoorSeating",
+# }
 
-for place in places:
-    place_id = place["id"]
-    details_url = f"https://places.googleapis.com/v1/places/{place_id}"
-    details_response=requests.get(details_url, headers=details_headers)
-    details_data=details_response.json()
-    outdoor = details_data.get("outdoorSeating")
-    display_name = details_data["displayName"]["text"]
-    if display_name:
-        print("Name of the Cafe is: ",display_name)
-    if outdoor is True:
-        print("✅ Outdoor seating: Yes")
-    elif outdoor is False:
-        print("❌ Outdoor seating: No")
-    else:
-        print("❓ Outdoor seating: Unknown (field missing)")
+# for place in places:
+#     place_id = place["id"]
+#     details_url = f"https://places.googleapis.com/v1/places/{place_id}"
+#     details_response=requests.get(details_url, headers=details_headers)
+#     details_data=details_response.json()
+#     outdoor = details_data.get("outdoorSeating")
+#     display_name = details_data["displayName"]["text"]
+#     if display_name:
+#         print("Name of the Cafe is: ",display_name)
+#     if outdoor is True:
+#         print("✅ Outdoor seating: Yes")
+#     elif outdoor is False:
+#         print("❌ Outdoor seating: No")
+#     else:
+#         print("❓ Outdoor seating: Unknown (field missing)")
 
 routes_url="https://routes.googleapis.com/directions/v2:computeRoutes"
 routes_body={
