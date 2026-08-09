@@ -63,50 +63,38 @@ def search(request):
     )
 
     results = []
+    destinations = []
     for cafe in nearby:
         # distance calculation
-        routes_url="https://routes.googleapis.com/directions/v2:computeRoutes"
-        routes_body={
-            "origin":{
-                "location":{
-                "latLng":{
-                    "latitude": search_lat,
-                    "longitude": search_lng
-                }
-                }
-            },
-            "destination":{
-                "location":{
-                "latLng":{
-                    "latitude": cafe.latitude,
-                    "longitude": cafe.longitude
-                }
-                }
-            },
-            "travelMode": "DRIVE",
-            "routingPreference": "TRAFFIC_AWARE",
-            "computeAlternativeRoutes": False,
-            "routeModifiers": {
-                "avoidTolls": False,
-                "avoidHighways": False,
-                "avoidFerries": False
-            },
-            "languageCode": "en-US",
-            "units": "METRIC"
-            }
-        routes_headers={"Content-Type": "application/json","X-Goog-Api-Key":api_key,
-        "X-Goog-FieldMask": "routes.distanceMeters,routes.duration"}
+        destinations.append({"waypoint": {"location": {"latLng": {"latitude": cafe.latitude, "longitude": cafe.longitude}}}})
+        origins = [{"waypoint": {"location": {"latLng": {"latitude": search_lat, "longitude": search_lng}}}}]
 
-        routes_response = requests.post(routes_url, headers=routes_headers, json=routes_body)
-        ans = routes_response.json()
-        distance_km = ans['routes'][0]['distanceMeters'] / 1000
-        distance_km = round(distance_km, 1)
+    matrix_url = "https://routes.googleapis.com/distanceMatrix/v2:computeRouteMatrix"
+    matrix_headers = {
+        "Content-Type": "application/json",
+        "X-Goog-Api-Key": api_key,
+        "X-Goog-FieldMask": "originIndex,destinationIndex,distanceMeters,duration",
+    }
+    matrix_body = {
+        "origins": origins,             # your list from piece one
+        "destinations": destinations,   # your list from piece one
+        "travelMode": "DRIVE",
+    }
 
-        duration_minutes = math.ceil(
-            int(ans['routes'][0]['duration'].replace('s', '')) / 60
-        )
-
-        cafe_dict={"name":cafe.name,"address":cafe.address,"rating":cafe.rating,"distance":distance_km,"time to reach by car":duration_minutes}
+    matrix_response = requests.post(matrix_url, headers=matrix_headers, json=matrix_body)
+    matrix_data = matrix_response.json()
+        # print(matrix_data)   # <-- we're going to LOOK at this before using it
+    route_by_index = {}
+    for element in matrix_data:
+        idx = element["destinationIndex"]
+        route_by_index[idx] = element      # now route_by_index[2] gives destination 2's result
+    results = []
+    for index, cafe in enumerate(nearby):
+        route = route_by_index[index]          # this café's route, by position
+        distance_km = round(route["distanceMeters"] / 1000, 1)
+        duration_minutes = math.ceil(int(route["duration"].replace("s","")) / 60)
+        cafe_dict = {"name": cafe.name, "address": cafe.address, "rating": cafe.rating,
+                    "distance": distance_km, "time to reach by car": duration_minutes}
         results.append(cafe_dict)
     return JsonResponse(results, safe=False)
     
