@@ -62,7 +62,6 @@ def search(request):
         longitude__gte = search_lng - 0.0045,
     )
 
-    results = []
     destinations = []
     for cafe in nearby:
         # distance calculation
@@ -83,7 +82,7 @@ def search(request):
 
     matrix_response = requests.post(matrix_url, headers=matrix_headers, json=matrix_body)
     matrix_data = matrix_response.json()
-        # print(matrix_data)   # <-- we're going to LOOK at this before using it
+    # print(matrix_data)   # <-- we're going to LOOK at this before using it
     route_by_index = {}
     for element in matrix_data:
         idx = element["destinationIndex"]
