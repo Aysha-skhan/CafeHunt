@@ -98,3 +98,5 @@ def search(request):
     return JsonResponse(results, safe=False)
     
 
+def home(request):
+    return render(request, "home.html")

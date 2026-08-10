@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CafeHunt</title>
+</head>
+<body>
+    <h1>CafeHunt</h1>
+    <div id="results">Cafés will appear here.</div>
+    <script>
+    fetch("/search/?lat=31.5186&lng=74.34589")
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+        });
+</script>
+</body>
+</html>
