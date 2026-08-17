@@ -2,17 +2,44 @@
 <html>
 <head>
     <title>CafeHunt</title>
+    <style>
+    body {
+        font-family: sans-serif;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f5f5f5;
+    }
+    h1 {
+        color: #6f4e37;
+    }
+    .cafe-card {
+        background: rgb(235, 131, 5);
+        border-radius: 25px;
+        padding: 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .cafe-card h2 {
+        margin: 0 0 8px 0;
+        color: #333;
+    }
+    .cafe-card p {
+        margin: 4px 0;
+        color: #666;
+    }
+</style>
 </head>
 <body>
     <h1>CafeHunt</h1>
     <div id="results">Cafés will appear here.</div>
     <script>
+    const container = document.getElementById("results");
+    container.innerHTML = "🔍 Finding cafés near you...";   // ← shows IMMEDIATELY
     fetch("/search/?lat=31.5186&lng=74.34589")
         .then(response => response.json())
         .then(data => {
-            const container = document.getElementById("results");
             container.innerHTML = "";
-
             data.forEach(cafe => {
                 container.innerHTML += `
                     <div class="cafe-card">
