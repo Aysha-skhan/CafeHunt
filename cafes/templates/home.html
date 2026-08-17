@@ -10,7 +10,19 @@
     fetch("/search/?lat=31.5186&lng=74.34589")
         .then(response => response.json())
         .then(data => {
-            console.log(data);
+            const container = document.getElementById("results");
+            container.innerHTML = "";
+
+            data.forEach(cafe => {
+                container.innerHTML += `
+                    <div class="cafe-card">
+                        <h2>${cafe.name}</h2>
+                        <p>${cafe.address}</p>
+                        <p>Rating: ${cafe.rating}</p>
+                        <p>${cafe.distance} km away — ${cafe["time to reach by car"]} min by car</p>
+                    </div>
+                `;
+            });
         });
 </script>
 </body>
