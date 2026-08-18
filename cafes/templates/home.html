@@ -34,11 +34,23 @@
     <h1>CafeHunt</h1>
     <input id="location-input" type="text" placeholder="Enter lat, lng (e.g. 31.5186, 74.34589)">
     <button id="search-button">Search</button>
+    <button id="location-button">📍 Use my location</button>
     <div id="results">Cafés will appear here.</div>
     <script>
     const button = document.getElementById("search-button");
     const input = document.getElementById("location-input");
-    const container = document.getElementById("results");
+    const locationButton = document.getElementById("location-button");
+
+locationButton.addEventListener("click", () => {
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            searchCafes(position.coords.latitude, position.coords.longitude);
+        },
+        (error) => {
+            container.innerHTML = "Couldn't get your location. Try typing it instead.";
+        }
+    );
+});
 
     button.addEventListener("click", () => {
     const typed = input.value.trim();
@@ -65,10 +77,16 @@
         container.innerHTML = "Latitude and longitude must be valid numbers.";
         return;
     }
+    //happy path
+    searchCafes(lat, lng);
 
-    // --- happy path: input is valid, do the search ---
+});
+
+const container = document.getElementById("results");
+
+// THE SHARED FUNCTION — written once, called by both buttons
+function searchCafes(lat, lng) {
     container.innerHTML = "🔍 Finding cafés near you...";
-
     fetch(`/search/?lat=${lat}&lng=${lng}`)
         .then(response => response.json())
         .then(data => {
@@ -84,7 +102,8 @@
                 `;
             });
         });
-});
+}
+
 </script>
 </body>
 </html>
