@@ -32,11 +32,44 @@
 </head>
 <body>
     <h1>CafeHunt</h1>
+    <input id="location-input" type="text" placeholder="Enter lat, lng (e.g. 31.5186, 74.34589)">
+    <button id="search-button">Search</button>
     <div id="results">Cafés will appear here.</div>
     <script>
+    const button = document.getElementById("search-button");
+    const input = document.getElementById("location-input");
     const container = document.getElementById("results");
-    container.innerHTML = "🔍 Finding cafés near you...";   // ← shows IMMEDIATELY
-    fetch("/search/?lat=31.5186&lng=74.34589")
+
+    button.addEventListener("click", () => {
+    const typed = input.value.trim();
+
+    // GUARD 1: empty box
+    if (typed === "") {
+        container.innerHTML = "Please enter coordinates, e.g. 31.5186, 74.34589";
+        return;
+    }
+
+    const parts = typed.split(",");
+
+    // GUARD 2: must have exactly two parts (a lat and a lng)
+    if (parts.length !== 2) {
+        container.innerHTML = "Please enter both latitude and longitude, separated by a comma.";
+        return;
+    }
+
+    const lat = parts[0].trim();
+    const lng = parts[1].trim();
+
+    // GUARD 3: both must be valid numbers
+    if (isNaN(lat) || isNaN(lng) || lat === "" || lng === "") {
+        container.innerHTML = "Latitude and longitude must be valid numbers.";
+        return;
+    }
+
+    // --- happy path: input is valid, do the search ---
+    container.innerHTML = "🔍 Finding cafés near you...";
+
+    fetch(`/search/?lat=${lat}&lng=${lng}`)
         .then(response => response.json())
         .then(data => {
             container.innerHTML = "";
@@ -51,6 +84,8 @@
                 `;
             });
         });
+});
 </script>
 </body>
 </html>
+

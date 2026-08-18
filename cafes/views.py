@@ -96,7 +96,11 @@ def search(request):
                     "distance": distance_km, "time to reach by car": duration_minutes}
         results.append(cafe_dict)
     return JsonResponse(results, safe=False)
-    
+
+# maxResultCount kept at 4 for now — trivial to raise later, not worth tuning mid-build.
+# Known limitation: cache serves the same set for any point within ~0.0045°, so
+# results aren't precise per-point. Proper fix (precise per-point queries) = PostGIS/GeoDjango.
+# Note: count and spatial indexing are SEPARATE concerns — PostGIS won't remove the need to pick a count.
 
 def home(request):
     return render(request, "home.html")
