@@ -93,7 +93,7 @@ def search(request):
         distance_km = round(route["distanceMeters"] / 1000, 1)
         duration_minutes = math.ceil(int(route["duration"].replace("s","")) / 60)
         cafe_dict = {"name": cafe.name, "address": cafe.address, "rating": cafe.rating,
-                    "distance": distance_km, "time to reach by car": duration_minutes}
+                    "distance": distance_km, "duration_min": duration_minutes}
         results.append(cafe_dict)
     return JsonResponse(results, safe=False)
 
