@@ -10,6 +10,14 @@ api_key = os.environ["GOOGLE_API_KEY"]
 # Create your views here.
 # def search(request):
 #     return HttpResponse("Hello, CafeHunt")
+# helper func
+def cafes_near(lat, lng):
+    return Cafe.objects.filter(
+        latitude__lte = lat + 0.0045,
+        latitude__gte = lat - 0.0045,
+        longitude__lte = lng + 0.0045,
+        longitude__gte = lng - 0.0045,
+    )
 def search(request):
     bad_request=HttpResponse("lat and lng are required and must be valid numbers.", status=400) 
     search_lat=request.GET.get("lat")
@@ -23,12 +31,7 @@ def search(request):
             return bad_request
     # search_lat = 31.5186      # hardcoded 
     # search_lng = 74.34589
-    nearby = Cafe.objects.filter(
-    latitude__lte = search_lat + 0.0045,
-    latitude__gte = search_lat - 0.0045,
-    longitude__lte = search_lng + 0.0045,
-    longitude__gte = search_lng - 0.0045,
-)
+    nearby = cafes_near(search_lat, search_lng)
     if not nearby.exists():
         search_url = "https://places.googleapis.com/v1/places:searchNearby"
         search_headers = {
@@ -55,18 +58,13 @@ def search(request):
             defaults={"name":place["displayName"]["text"], "latitude":place["location"]["latitude"],"longitude":place["location"]["longitude"],
                     "rating":place.get("rating"), "address":place.get("formattedAddress")},
         )
-    nearby = Cafe.objects.filter(
-        latitude__lte = search_lat + 0.0045,
-        latitude__gte = search_lat - 0.0045,
-        longitude__lte = search_lng + 0.0045,
-        longitude__gte = search_lng - 0.0045,
-    )
+    nearby = cafes_near(search_lat, search_lng)
 
     destinations = []
     for cafe in nearby:
         # distance calculation
         destinations.append({"waypoint": {"location": {"latLng": {"latitude": cafe.latitude, "longitude": cafe.longitude}}}})
-        origins = [{"waypoint": {"location": {"latLng": {"latitude": search_lat, "longitude": search_lng}}}}]
+    origins = [{"waypoint": {"location": {"latLng": {"latitude": search_lat, "longitude": search_lng}}}}]
 
     matrix_url = "https://routes.googleapis.com/distanceMatrix/v2:computeRouteMatrix"
     matrix_headers = {
